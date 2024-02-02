@@ -1,24 +1,25 @@
 // Import the modules
-const request = require('request');
-const cheerio = require('cheerio');
-const fs = require('fs'); // Import the fs module
+import dotenv from 'dotenv';
+import cheerio from 'cheerio';
+import fs from 'fs/promises'; // Import the fs module with promises
+import fetch from 'node-fetch'; // Import the fetch module
 
-const newsDataJson = "newsData.json";
+dotenv.config();
 
-// Define a function named scrapeNewsData
-function scrapeNewsData(url) {
-    // Make the request
-    request(url, (error, response, html) => {
-        // Check for errors
-        if (error) {
-            console.error(error);
-            return;
-        }
+const URL = process.env.URL;
+const newsDataJsonPath = process.env.newsDataJsonPath;
+
+// Define an async function named scrapeNewsData
+export const scrapeNewsData = async (url) => {
+    try {
+        // Make the request using fetch and await
+        const response = await fetch(url);
         // Check for successful response
-        if (response.statusCode !== 200) {
-            console.error(`Invalid status code: ${response.statusCode}`);
-            return;
+        if (response.status !== 200) {
+            throw new Error(`Invalid status code: ${response.status}`);
         }
+        // Get the HTML text from the response
+        const html = await response.text();
         // Load the HTML into cheerio
         const $ = cheerio.load(html);
 
@@ -49,21 +50,17 @@ function scrapeNewsData(url) {
                 link: newsLink,
                 date: newsDate
             };
+
         });
 
-        // Write the dictionary to the JSON file
-        fs.writeFile(newsDataJson, JSON.stringify(newsData), (err) => {
-            // Check for errors
-            if (err) {
-                console.error(err);
-                return;
-            }
-            // Success message
-            console.log(`Saved data to ${newsDataJson}`);
-        });
-    });
-}
+        // Convert the newsData object to a plain JavaScript object using JSON.stringify and JSON.parse
+        const newsDataPlain = JSON.parse(JSON.stringify(newsData));
 
-// Call the function with a URL and a file name
-scrapeNewsData("https://subodhpgcollege.com/notice_board");
+        // Return the newsDataPlain object
+        return newsDataPlain;
 
+    } catch (error) {
+        // Handle errors
+        console.error(error);
+    }
+};

@@ -1,3 +1,5 @@
 /newsData.json
 /node_modules
 /package-lock.json
+.env
+subodhnotifier-firebase-adminsdk.json
