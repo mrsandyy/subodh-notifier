@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "An automated service to send webpush notifications of every new update from Subodh Website",
   "main": "app.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,7 +25,8 @@
     "node-fetch": "^3.3.2",
     "qrcode-terminal": "^0.12.0",
     "request": "^2.88.2",
-    "whatsapp-web.js": "^1.24.0",
+    "whatsapp-web.js": "github:alechkos/whatsapp-web.js#channels",
+    "ws": "^8.17.0",
     "wwebjs-mongo": "^1.1.0"
   }
 }

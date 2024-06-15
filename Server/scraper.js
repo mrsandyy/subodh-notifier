@@ -6,9 +6,6 @@ import fetch from 'node-fetch'; // Import the fetch module
 
 dotenv.config();
 
-const URL = process.env.URL;
-const newsDataJsonPath = process.env.newsDataJsonPath;
-
 // Define an async function named scrapeNewsData
 export const scrapeNewsData = async (url) => {
     try {
@@ -27,8 +24,8 @@ export const scrapeNewsData = async (url) => {
         const commentList = $('ul.list_none.comment_list');
         const commentItems = commentList.find('li.comment_info');
 
-        // Initialize an empty dictionary to store the data
-        const newsData = {};
+        // Initialize an empty array to store the data
+        const newsData = [];
 
         // Define a regular expression to match the date format
         const dateRegex = /\d{2}\/\d{2}\/\d{4}/;
@@ -46,18 +43,15 @@ export const scrapeNewsData = async (url) => {
             // If there is a match, get the first element of the array
             const newsDate = newsDateMatch ? newsDateMatch[0] : '';
             // Store the data in the dictionary with the title as the key
-            newsData[newsTitle] = {
+            let newsItem = {
+                title: newsTitle,
                 link: newsLink,
                 date: newsDate
             };
-
+            newsData.push(newsItem);
         });
 
-        // Convert the newsData object to a plain JavaScript object using JSON.stringify and JSON.parse
-        const newsDataPlain = JSON.parse(JSON.stringify(newsData));
-
-        // Return the newsDataPlain object
-        return newsDataPlain;
+        return newsData;
 
     } catch (error) {
         // Handle errors

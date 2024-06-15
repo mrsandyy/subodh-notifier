@@ -1,49 +1,37 @@
-const { Client, RemoteAuth } = require('whatsapp-web.js');
-const { MongoStore } = require('wwebjs-mongo');
-const mongoose = require('mongoose');
-const qrcodeTerminal = require('qrcode-terminal');
-const dotenv = require('dotenv')
+import { startClient, sendChannelMessage, sleep } from "./server/whatsapp.js";
+import { scrapeNewsData } from "./server/scraper.js";
+import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
-const mongoUri = process.env.MONGODB_URI;
+const URL = process.env.URL;
+const channelId = process.env.CHANNEL_ID;
+const sleepTime = 10 * 60 * 1000; // 10 mins
+const cooldownTime = 10 * 60 * 1000; // 10 mins
 
-const connectToMongo = async () => {
-    try {
-        await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
-        console.log('Connected to MongoDB');
-    } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-        process.exit(1);
-    }
-};
+const waClient = await startClient();
 
-const startWhatsapp = async () => {
-    await connectToMongo();
+while (true) {
+    let data = await scrapeNewsData(URL);
 
-    const store = new MongoStore({ mongoose: mongoose });
+    const today = new Date();
+    const thresholdDate = new Date(today.getTime() + (3 * 24 * 60 * 60 * 1000));  // 3 days in milliseconds
 
-    const client = new Client({
-        authStrategy: new RemoteAuth({
-            store: store,
-            backupSyncIntervalMs: 300000,
-        }),
-        webVersionCache: {
-            type: 'remote',
-            remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html',
-        },
+    data.forEach(element => {
+        // Parse the date string from the element into a Date object
+        const elementDate = new Date(element.date.split('/').reverse().join('-')); // Assuming DD/MM/YYYY format
+
+        // Random delay between 1 to 10 seconds after each message
+        const randomDelay = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
+
+        if (elementDate > thresholdDate) {
+            sendChannelMessage(waClient, channelId, element.title);
+            sleep(randomDelay);
+
+        } else {
+            console.log("Nuh Uh!");
+        }
     });
 
-    client.on('qr', (qr) => {
-        console.log('Scan the QR code to login:');
-        qrcodeTerminal.generate(qr, { small: true });
-    });
-
-    client.on('ready', () => {
-        console.log('Logged in successfully!');
-    });
-
-    client.initialize();
-};
-
-startWhatsapp();
+    await sleep(sleepTime);
+}
