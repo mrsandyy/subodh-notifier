@@ -9,29 +9,26 @@ const channelId = process.env.CHANNEL_ID;
 const sleepTime = 10 * 60 * 1000; // 10 mins
 const cooldownTime = 10 * 60 * 1000; // 10 mins
 
-const waClient = await startClient();
+// const waClient = await startClient();
 
 while (true) {
     let data = await scrapeNewsData(URL);
 
     const today = new Date();
-    const thresholdDate = new Date(today.getTime() + (3 * 24 * 60 * 60 * 1000));  // 3 days in milliseconds
+    const thresholdDate = new Date(today.getTime() - (3 * 24 * 60 * 60 * 1000));  // 3 days in milliseconds
 
-    data.forEach(element => {
-        // Parse the date string from the element into a Date object
-        const elementDate = new Date(element.date.split('/').reverse().join('-')); // Assuming DD/MM/YYYY format
-
-        // Random delay between 1 to 10 seconds after each message
+    for (const element of data) {
+        const elementDate = new Date(element.date.split('/').reverse().join('-'));
         const randomDelay = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
 
-        if (elementDate > thresholdDate) {
-            sendChannelMessage(waClient, channelId, element.title);
-            sleep(randomDelay);
+        console.log(randomDelay);
 
+        if (elementDate > thresholdDate) {
+            await sendChannelMessage(waClient, channelId, element.title);
         } else {
             console.log("Nuh Uh!");
         }
-    });
-
+        await sleep(randomDelay);
+    }
     await sleep(sleepTime);
 }
