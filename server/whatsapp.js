@@ -6,7 +6,6 @@ import Whatsapp from 'whatsapp-web.js'
 const { Client, RemoteAuth, Poll } = Whatsapp
 
 dotenv.config();
-// dotenv.config({ path: '../.env' });
 
 const wwebVersion = '2.2412.54';
 const mongoUri = process.env.MONGODB_URI;
@@ -65,9 +64,12 @@ export const startClient = async () => {
     return client;
 };
 
-export const sendChannelMessage = async (client, channelId, message) => {
+export const sendChannelMessage = async (client, channelId, newsDataElement) => {
     try {
+        const message = newsDataElement.title;
+
         await client.sendMessage(channelId, message);
+
         console.log(`Successfully sent message to channel: ${message}`);
     } catch (error) {
         console.error('Error sending message to channel:', error);

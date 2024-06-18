@@ -1,7 +1,7 @@
 import { startClient, sendChannelMessage, sleep } from "./server/whatsapp.js";
-import { getRandomDelay } from "./server/extraFunc.js";
+import { getUniqueNews, updateSentNews } from "./server/news.js";
+import { getRandomDelay } from "./server/timeFunctions.js";
 import dotenv from 'dotenv';
-import { getUniqueNews } from "./server/news.js";
 
 dotenv.config();
 
@@ -9,17 +9,18 @@ const URL = process.env.URL;
 const channelId = process.env.CHANNEL_ID;
 const sleepTime = 10 * 60 * 1000; // 10 mins
 
-// const waClient = await startClient();
+const waClient = await startClient();
 
 while (true) {
     const uniqueNewsArray = await getUniqueNews(URL);
 
-    console.log(uniqueNewsArray);
-
     for (const newsDataElement of uniqueNewsArray) {
 
-        const randomDelay = getRandomDelay(1, 10);
-        // await sendChannelMessage(waClient, channelId, newsDataElement.title);
+        const randomDelay = getRandomDelay(10, 20);
+        await sendChannelMessage(waClient, channelId, newsDataElement);
+
+        await updateSentNews(newsDataElement);
+
         await sleep(randomDelay);
 
     }

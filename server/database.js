@@ -30,6 +30,5 @@ export const storeNewsData = async (newsData) => {
     // Commit the batch
     await batch.commit();
 
-    // Log a success message
     console.log('News stored successfully');
 };

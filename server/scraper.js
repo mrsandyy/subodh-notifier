@@ -1,12 +1,10 @@
-// Import the modules
 import dotenv from 'dotenv';
 import cheerio from 'cheerio';
-import fs from 'fs/promises'; // Import the fs module with promises
-import fetch from 'node-fetch'; // Import the fetch module
+import fs from 'fs/promises';
+import fetch from 'node-fetch';
 
 dotenv.config();
 
-// Define an async function named scrapeNewsData
 export const scrapeNewsData = async (url) => {
     try {
         // Make the request using fetch and await
