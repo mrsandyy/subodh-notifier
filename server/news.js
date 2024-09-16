@@ -1,38 +1,49 @@
-import sentNewsArray from '../sentNews.json' assert { type: 'json' };
+import sentNewsArray from '../sentNews.json' with { type: 'json' };
 import { getElementDate, getRandomDelay, getThresholdDate } from "./timeFunctions.js";
 import { scrapeNewsData } from "./scraper.js";
 import stringSimilarity from "string-similarity";
+import dotenv from 'dotenv';
 import fs from 'fs';
 
-const fileName = './sentNews.json';
+dotenv.config();
 
-export let getFirstTenNews = (fullNewsDataArray) => {
-    return fullNewsDataArray.slice(0, 10);
-}
+const sentNewsFile = process.env.SENTNEWS_LOCATION; // Location of the sent news file.
+const fetchedNewsAmount = process.env.FETCHED_NEWS_AMOUNT; // Number of how many news items will be fetched from top.
+const sentNewsLimit = process.env.SENT_NEWS_LIMIT; // Number of items to keep in sentNews.json
+const newNewsDaysThreshold = process.env.NEW_NEWS_DAYS_THRESHOLD; // Number of days accepted as new news from today. 
+
+// High is for absolute limits on unique news.
+// If the new news title is matching with existing sent News with more than High threshold it won't be considered unique. 
+const titleSimilarityThresholdHigh = process.env.TITLE_SIMILARITY_THRESHOLD_HIGH;
+
+// Low is for lowest similarity percentage to be considered not unique.
+// If the new news title is matching with existing sent News title AND the old title is within newNewsDaysThreshold it won't be considered unique.
+const titleSimilarityThresholdLow = process.env.TITLE_SIMILARITY_THRESHOLD_LOW;
+
 
 export let getUniqueNews = async (URL) => {
     const newsDataArray = await scrapeNewsData(URL);
 
-    const firstTenNewsArray = getFirstTenNews(newsDataArray);
+    const slicedNewsArray = newsDataArray.slice(0, fetchedNewsAmount);
 
     // Create a set of unique titles from the old items for efficient lookups
     const sentNewsTitlesSet = new Set(sentNewsArray.map(element => element.title));
 
     // Filter new items based on whether their title exists in the old items set
-    const uniqueNewsArray = firstTenNewsArray.filter(newItem => {
+    const uniqueNewsArray = slicedNewsArray.filter(newItem => {
         let oldTitleindex = 0;
         for (const oldTitle of sentNewsTitlesSet) {
 
-            if (!(isNewerThanThresholdDate(newItem, 2))) {
+            if (!(isNewerThanThresholdDate(newItem, newNewsDaysThreshold))) {
                 return false;
             }; // Not Unique if older than threshold date.
 
-            if (isSimilarTitle(newItem.title, oldTitle, 0.98)) {
+            if (isSimilarTitle(newItem.title, oldTitle, titleSimilarityThresholdHigh)) {
                 return false;
             }; // Not unique if a title similarity is more than 0.98
 
-            if (isSimilarTitle(newItem.title, oldTitle, 0.9)) {
-                if (!(isNewerThanThresholdDate(sentNewsArray[oldTitleindex], 2))) {
+            if (isSimilarTitle(newItem.title, oldTitle, titleSimilarityThresholdLow)) {
+                if (!(isNewerThanThresholdDate(sentNewsArray[oldTitleindex], newNewsDaysThreshold))) {
                     return true; // Unique if title is similar ( between 0.9 to 0.98) to old title but the old update is older than threshold date.
                 } else {
                     return false;
@@ -49,7 +60,7 @@ export let getUniqueNews = async (URL) => {
 
 export let updateSentNews = async (newsElement) => {
 
-    while (sentNewsArray.length >= 20) {
+    while (sentNewsArray.length >= sentNewsLimit) {
         sentNewsArray.shift()
     }
 
@@ -57,7 +68,7 @@ export let updateSentNews = async (newsElement) => {
 
     const sentNewsjsonString = JSON.stringify(sentNewsArray, null, 2);
 
-    fs.writeFileSync(fileName, sentNewsjsonString);
+    fs.writeFileSync(sentNewsFile, sentNewsjsonString);
 
 };
 
