@@ -59,6 +59,10 @@ export const scrapeNewsData = async (url) => {
                     throw new Error('No href attribute found');
                 };
 
+                if (!(newsLink.toLowerCase().startsWith("http"))) {
+                    newsLink = `https://subodhpgcollege.com/${newsLink}`;
+                };
+
             } catch (e) {
                 console.log(`Error extracting link for ${newsTitle}: ${e}`);
                 newsLink = 'https://subodhpgcollege.com/notice_board';
@@ -74,6 +78,11 @@ export const scrapeNewsData = async (url) => {
 
                 // Use the regular expression to extract the date
                 const newsDateMatch = dateRegex.exec(newsDateText);
+
+                if (!newsDateMatch) {
+                    throw new Error('No Date found.');
+                };
+
                 // If there is a match, get the first element of the array
                 newsDate = newsDateMatch ? newsDateMatch[0] : '';
 

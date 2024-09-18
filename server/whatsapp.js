@@ -44,16 +44,8 @@ export const startClient = async () => {
     });
 
     client.on('message_create', message => {
-
-        // if (message.body.toLowerCase() === "Text HERE to get groupID") {
-        //     console.log(message.from);
-        // }
-
         if (message.body.toLowerCase() === 'hi') {
-            // Generate a random delay between 1 and 3 seconds (in milliseconds)
             const delay = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000;
-
-            // Use setTimeout to delay the reply
             setTimeout(() => {
                 client.sendMessage(message.from, 'wassup');
             }, delay);
@@ -67,19 +59,51 @@ export const startClient = async () => {
 };
 
 export const sendMessageToId = async (client, chatId, newsDataElement) => {
-    try {
-        const title = newsDataElement.title;
-        const link = newsDataElement.link;
-        const date = newsDataElement.date;
+    return new Promise(async (resolve, reject) => {
+        try {
+            const title = newsDataElement.title;
+            const link = newsDataElement.link;
+            const date = newsDataElement.date;
 
-        const message = `*${title}* \n\n Date: ${date} \n\n Link: .${link}`;
+            const message = `*${title}* \n\n Date: ${date} \n\n Link: ${link}`;
 
-        await client.sendMessage(chatId, message);
+            const sentMessage = await client.sendMessage(chatId, message);
 
-        console.log(`Successfully sent message: ${message}`);
-    } catch (error) {
-        console.error('Error sending message:', error);
-    };
+            let isResolved = false;
+
+            const ackListener = (ack) => {
+                if (ack.id._serialized === sentMessage.id._serialized) {
+                    if (!isResolved) {
+                        isResolved = true;
+                        client.removeListener('message_ack', ackListener);
+                        clearTimeout(timeoutId);
+                        if (ack.ack > 0) {
+                            console.log(`Message delivered (ack ${ack.ack}): ${message}`);
+                            resolve(true);
+                        } else {
+                            console.log(`Message not delivered (ack 0): ${message}`);
+                            resolve(false);
+                        }
+                    }
+                }
+            };
+
+            client.on('message_ack', ackListener);
+
+            const timeoutId = setTimeout(() => {
+                if (!isResolved) {
+                    isResolved = true;
+                    client.removeListener('message_ack', ackListener);
+                    console.log(`No ack received for message: ${message}`);
+                    resolve(false);
+                }
+            }, 30000); // 30 seconds timeout
+
+        } catch (error) {
+            console.error('Error sending message:', error);
+            reject(error);
+        }
+    });
 };
 
 export function sleep(ms) {

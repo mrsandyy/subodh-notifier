@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Create a new Firestore instance
 const firestore = new Firestore();
 
 export const storeNewsData = async (newsData) => {
@@ -16,10 +15,8 @@ export const storeNewsData = async (newsData) => {
     for (const [title, data] of Object.entries(newsData)) {
         // Generate a random document ID
         const documentID = firestore.collection('_').doc().id;
-        // Use the documentID as the argument for the doc method
         const document = collection.doc(documentID);
 
-        // Add a set operation to the batch with the title, link and date fields
         batch.set(document, {
             title: title || "",
             link: data.link || "",
@@ -27,7 +24,6 @@ export const storeNewsData = async (newsData) => {
         });
     }
 
-    // Commit the batch
     await batch.commit();
 
     console.log('News stored successfully');

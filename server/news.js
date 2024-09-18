@@ -20,7 +20,6 @@ const titleSimilarityThresholdHigh = process.env.TITLE_SIMILARITY_THRESHOLD_HIGH
 // If the new news title is matching with existing sent News title AND the old title is within newNewsDaysThreshold it won't be considered unique.
 const titleSimilarityThresholdLow = process.env.TITLE_SIMILARITY_THRESHOLD_LOW;
 
-
 export let getUniqueNews = async (URL) => {
     const newsDataArray = await scrapeNewsData(URL);
 
