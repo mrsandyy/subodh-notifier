@@ -71,7 +71,7 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
 
             let isResolved = false;
 
-            const ackListener = (ack) => {
+            const ackListener = async (ack) => {
                 if (ack.id._serialized === sentMessage.id._serialized) {
                     if (!isResolved) {
                         isResolved = true;
@@ -79,7 +79,16 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
                         clearTimeout(timeoutId);
                         if (ack.ack > 0) {
                             console.log(`Message delivered (ack ${ack.ack}): ${message}`);
-                            resolve(true);
+
+                            // Additional verification step
+                            const isVerified = await verifyMessageInGroup(client, chatId, message);
+                            if (isVerified) {
+                                console.log(`Message verified in group chat: ${message}`);
+                                resolve(true);
+                            } else {
+                                console.log(`Message not found in group chat: ${message}`);
+                                resolve(false);
+                            }
                         } else {
                             console.log(`Message not delivered (ack 0): ${message}`);
                             resolve(false);
@@ -104,6 +113,25 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             reject(error);
         }
     });
+};
+
+export const verifyMessageInGroup = async (client, chatId, messageContent) => {
+    try {
+        const chat = await client.getChatById(chatId);
+        const messages = await chat.fetchMessages({ limit: 50 }); // Fetch last 50 messages
+
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+
+        const foundMessage = messages.find(msg =>
+            msg.body === messageContent &&
+            new Date(msg.timestamp * 1000) >= fiveMinutesAgo
+        );
+
+        return !!foundMessage;
+    } catch (error) {
+        console.error('Error verifying message in group:', error);
+        return false;
+    }
 };
 
 export function sleep(ms) {

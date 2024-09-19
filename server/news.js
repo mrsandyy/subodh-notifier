@@ -1,9 +1,8 @@
-import sentNewsArray from '../sentNews.json' with { type: 'json' };
 import { getElementDate, getRandomDelay, getThresholdDate } from "./timeFunctions.js";
 import { scrapeNewsData } from "./scraper.js";
 import stringSimilarity from "string-similarity";
 import dotenv from 'dotenv';
-import fs from 'fs';
+import fs from 'fs/promises';
 
 dotenv.config();
 
@@ -24,6 +23,9 @@ export let getUniqueNews = async (URL) => {
     const newsDataArray = await scrapeNewsData(URL);
 
     const slicedNewsArray = newsDataArray.slice(0, fetchedNewsAmount);
+
+    // Read the latest data from the file
+    const sentNewsArray = await readSentNewsArray();
 
     // Create a set of unique titles from the old items for efficient lookups
     const sentNewsTitlesSet = new Set(sentNewsArray.map(element => element.title));
@@ -59,6 +61,8 @@ export let getUniqueNews = async (URL) => {
 
 export let updateSentNews = async (newsElement) => {
 
+    let sentNewsArray = await readSentNewsArray();
+
     while (sentNewsArray.length >= sentNewsLimit) {
         sentNewsArray.shift()
     }
@@ -67,7 +71,12 @@ export let updateSentNews = async (newsElement) => {
 
     const sentNewsjsonString = JSON.stringify(sentNewsArray, null, 2);
 
-    fs.writeFileSync(sentNewsFile, sentNewsjsonString);
+    try {
+        await fs.writeFile(sentNewsFile, sentNewsjsonString);
+        console.log('File written successfully!');
+    } catch (error) {
+        console.error('Error writing file:', error);
+    }
 
 };
 
@@ -83,3 +92,13 @@ let isNewerThanThresholdDate = (element, days) => {
 
     return elementDate > thresholdDate;
 };
+
+let readSentNewsArray = async () => {
+    try {
+        const data = await fs.readFile(sentNewsFile, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Error reading sent news file:', error);
+        return [];
+    }
+}

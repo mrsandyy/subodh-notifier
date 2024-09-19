@@ -1,4 +1,4 @@
-import { startClient, sleep, sendMessageToId } from "./server/whatsapp.js";
+import { startClient, sleep, sendMessageToId, verifyMessageInGroup } from "./server/whatsapp.js";
 import { getUniqueNews, updateSentNews } from "./server/news.js";
 import { getRandomDelay } from "./server/timeFunctions.js";
 import pQueue from 'p-queue';
@@ -9,7 +9,7 @@ dotenv.config();
 const URL = process.env.URL;
 const groupId = process.env.GROUP_ID;
 const channelId = process.env.CHANNEL_ID;
-const intervalBetweenScrapping = parseInt(process.env.INTERVAL_BETWEEN_SCRAPING, 10); // 10 mins
+const intervalBetweenScrapping = process.env.INTERVAL_BETWEEN_SCRAPING; // 10 mins
 
 async function main() {
     const waClient = await startClient();
@@ -26,33 +26,43 @@ async function main() {
                     let retries = 3;
                     let success = false;
 
-                    while (retries > 0 && !success) {
-                        try {
-                            console.log(`Attempting to send news: ${newsDataElement.title}`);
-                            success = await sendMessageToId(waClient, groupId, newsDataElement);
-                            if (success) {
-                                console.log(`News sent successfully: ${newsDataElement.title}`);
-                                await updateSentNews(newsDataElement);
-                                console.log(`Updated sent news status for: ${newsDataElement.title}`);
-                            } else {
-                                console.log(`Failed to send news: ${newsDataElement.title}, retries left: ${retries - 1}`);
+                    const intervalBetweenMessages = getRandomDelay(30, 120) * 1000; // Delay in milliseconds
+
+                    console.log(`Waiting ${intervalBetweenMessages / 1000} seconds before next message`);
+                    await sleep(intervalBetweenMessages);
+
+                    const messageContent = `*${newsDataElement.title}* \n\n Date: ${newsDataElement.date} \n\n Link: ${newsDataElement.link}`;
+
+                    // Check if the message was already sent successfully
+                    if (await verifyMessageInGroup(waClient, groupId, messageContent)) {
+                        console.log(`Message already sent successfully: ${newsDataElement.title}`);
+                        success = true;
+                    } else {
+                        while (retries > 0 && !success) {
+                            try {
+                                console.log(`Attempting to send news: ${newsDataElement.title}`);
+                                success = await sendMessageToId(waClient, groupId, newsDataElement);
+                                if (success) {
+                                    console.log(`News sent successfully: ${newsDataElement.title}`);
+                                } else {
+                                    console.log(`Failed to send news: ${newsDataElement.title}, retries left: ${retries - 1}`);
+                                    retries--;
+                                    await sleep(intervalBetweenMessages); // Wait before retrying
+                                }
+                            } catch (error) {
+                                console.error(`Error sending news: ${newsDataElement.title}`, error);
                                 retries--;
-                                await sleep(5000); // Wait 5 seconds before retrying
+                                await sleep(5000);
                             }
-                        } catch (error) {
-                            console.error(`Error sending news: ${newsDataElement.title}`, error);
-                            retries--;
-                            await sleep(5000);
                         }
                     }
 
-                    if (!success) {
+                    if (success) {
+                        await updateSentNews(newsDataElement);
+                        console.log(`Updated sent news status for: ${newsDataElement.title}`);
+                    } else {
                         console.error(`Failed to send news after all retries: ${newsDataElement.title}`);
                     }
-
-                    const intervalBetweenMessages = getRandomDelay(30, 120) * 1000; // Convert to milliseconds
-                    console.log(`Waiting ${intervalBetweenMessages / 1000} seconds before next message`);
-                    await sleep(intervalBetweenMessages);
                 });
             }
 
