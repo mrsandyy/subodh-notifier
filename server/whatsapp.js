@@ -2,8 +2,10 @@ import { MongoStore } from 'wwebjs-mongo';
 import mongoose from 'mongoose';
 import qrcodeTerminal from 'qrcode-terminal';
 import dotenv from 'dotenv';
-import Whatsapp from 'whatsapp-web.js'
-const { Client, RemoteAuth, Poll } = Whatsapp
+import Whatsapp from 'whatsapp-web.js';
+import { downloadPdf } from './pdf.js';
+
+const { Client, RemoteAuth, MessageMedia } = Whatsapp
 
 dotenv.config();
 
@@ -65,9 +67,22 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             const link = newsDataElement.link;
             const date = newsDataElement.date;
 
-            const message = `*${title}* \n\n Date: ${date} \n\n Link: ${link}`;
+            let message = "";
+            let sentMessage = null;
+            let pdfPath = "";
 
-            const sentMessage = await client.sendMessage(chatId, message);
+            if (link.toLowerCase().endsWith('.pdf')) {
+                message = `*${title}* \n\nDate: ${date}`;
+
+                pdfPath = await downloadPdf(link);
+
+                const media = MessageMedia.fromFilePath(pdfPath);
+                sentMessage = await client.sendMessage(chatId, media, { caption: message });
+
+            } else {
+                message = `*${title}* \n\nDate: ${date} \n\nLink: ${link}`;
+                sentMessage = await client.sendMessage(chatId, message);
+            };
 
             let isResolved = false;
 
