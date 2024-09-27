@@ -104,44 +104,19 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
                 sentMessage = await client.sendMessage(chatId, message);
             };
 
-            let isResolved = false;
+            console.log('Message sent, waiting to verify...');
 
-            const ackListener = async (ack) => {
-                if (ack.id._serialized === sentMessage.id._serialized) {
-                    if (!isResolved) {
-                        isResolved = true;
-                        client.removeListener('message_ack', ackListener);
-                        clearTimeout(timeoutId);
-                        if (ack.ack > 0) {
-                            console.log(`Message delivered (ack ${ack.ack}): ${message}`);
+            // Wait for the message to be processed
+            await sleep(5000);
 
-                            // Additional verification step
-                            const isVerified = await verifyMessageInGroup(client, chatId, message);
-                            if (isVerified) {
-                                console.log(`Message verified in group chat: ${message}`);
-                                resolve(true);
-                            } else {
-                                console.log(`Message not found in group chat: ${message}`);
-                                resolve(false);
-                            }
-                        } else {
-                            console.log(`Message not delivered (ack 0): ${message}`);
-                            resolve(false);
-                        }
-                    }
-                }
-            };
-
-            client.on('message_ack', ackListener);
-
-            const timeoutId = setTimeout(() => {
-                if (!isResolved) {
-                    isResolved = true;
-                    client.removeListener('message_ack', ackListener);
-                    console.log(`No ack received for message: ${message}`);
-                    resolve(false);
-                }
-            }, 30000); // 30 seconds timeout
+            const isVerified = await verifyMessageInGroup(client, chatId, message);
+            if (isVerified) {
+                console.log('Message verified in group chat');
+                resolve(true);
+            } else {
+                console.log('Message not found in group chat');
+                resolve(false);
+            }
 
         } catch (error) {
             console.error('Error sending message:', error);
