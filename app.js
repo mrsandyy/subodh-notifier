@@ -1,4 +1,4 @@
-import { startClient, sleep, sendMessageToId, verifyMessageInGroup } from "./server/whatsapp.js";
+import { startClient, sleep, sendMessageToId, verifyMessageInGroup, pingClient } from "./server/whatsapp.js";
 import { getUniqueNews, updateSentNews } from "./server/news.js";
 import { getRandomDelay } from "./server/timeFunctions.js";
 import pQueue from 'p-queue';
@@ -70,6 +70,7 @@ async function main() {
             await queue.onIdle();
             console.log(`Sleeping for ${intervalBetweenScrapping / 1000} seconds before next scrape`);
             await sleep(intervalBetweenScrapping);
+            await pingClient(waClient);
         } catch (error) {
             console.error('Error in main loop:', error);
             console.log('Waiting 60 seconds before trying again...');

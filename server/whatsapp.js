@@ -60,6 +60,23 @@ export const startClient = async () => {
     return client;
 };
 
+export const pingClient = async (client) => {
+    try {
+        // Perform a "ping" to keep the connection alive
+        await client.getState();
+        console.log('Keep-alive ping successful');
+    } catch (error) {
+        console.error('Error during keep-alive ping:', error);
+        // Attempt to reinitialize the client if the ping fails
+        try {
+            await client.initialize();
+            console.log('Client reinitialized successfully');
+        } catch (reinitError) {
+            console.error('Failed to reinitialize client:', reinitError);
+        }
+    }
+};
+
 export const sendMessageToId = async (client, chatId, newsDataElement) => {
     return new Promise(async (resolve, reject) => {
         try {
