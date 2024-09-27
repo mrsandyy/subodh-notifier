@@ -47,7 +47,7 @@ export const scrapeNewsData = async (url) => {
                 newsTitle = cleanText(newsTitle);
 
             } catch (e) {
-                console.log(`Error extracting title for comment ${index + 1}: ${e}`);
+                // console.log(`Error extracting title for comment ${index + 1}: ${e}`);
                 newsTitle = "Unable to retrieve title. Please visit the official website for the latest information. We are working on resolving this issue.";
             };
 
@@ -64,7 +64,7 @@ export const scrapeNewsData = async (url) => {
                 };
 
             } catch (e) {
-                console.log(`Error extracting link for ${newsTitle}: ${e}`);
+                // console.log(`Error extracting link for ${newsTitle}: ${e}`);
                 newsLink = 'https://subodhpgcollege.com/notice_board';
             };
 
@@ -87,7 +87,7 @@ export const scrapeNewsData = async (url) => {
                 newsDate = newsDateMatch ? newsDateMatch[0] : '';
 
             } catch (e) {
-                console.log(`Error extracting date for ${newsTitle}: ${e}`);
+                // console.log(`Error extracting date for ${newsTitle}: ${e}`);
 
                 // If there's a previous news item, use its date
                 if (index > 0 && newsData[index - 1].date) {

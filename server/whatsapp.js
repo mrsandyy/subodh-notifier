@@ -89,15 +89,18 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             let pdfPath = "";
 
             if (link.toLowerCase().endsWith('.pdf')) {
-                message = `*${title}* \n\nDate: ${date}`;
+                message = `*Latest Update:* ${title}\n\n\n> ${link}\n\n\n> ✨ Via *Subodh Notifier*`;
 
                 pdfPath = await downloadPdf(link);
 
                 const media = MessageMedia.fromFilePath(pdfPath);
                 sentMessage = await client.sendMessage(chatId, media, { caption: message });
 
+            } else if (link.toLowerCase().endsWith('notice_board')) {
+                message = `*Latest Update:* ${title}\n\n\n> ${link}\n\n\n> ✨ Via *Subodh Notifier*`;
+                sentMessage = await client.sendMessage(chatId, message);
             } else {
-                message = `*${title}* \n\nDate: ${date} \n\nLink: ${link}`;
+                message = `*Latest Update:* ${title}\n\n\n> ${link}\n\n\n> ✨ Via *Subodh Notifier*`;
                 sentMessage = await client.sendMessage(chatId, message);
             };
 
