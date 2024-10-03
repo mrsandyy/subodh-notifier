@@ -71,16 +71,7 @@ export const downloadAndConvertPdf = async (pdfUrl) => {
         const pngPath = path.join(imgDir, `${pdfName.replace('.pdf', '_hq.png')}`);
         await fs.writeFile(pngPath, combinedImage);
 
-        // Create a JPEG version optimized for WhatsApp
-        const jpegPath = path.join(imgDir, `${pdfName.replace('.pdf', '_whatsapp.jpg')}`);
-        await sharp(combinedImage)
-            .jpeg({
-                quality: 90,
-                chromaSubsampling: '4:4:4'
-            })
-            .toFile(jpegPath);
-
-        return { jpegPath };
+        return pngPath;
     } catch (error) {
         console.log(`Error while downloading and converting pdf: ${error}`);
         throw error;
