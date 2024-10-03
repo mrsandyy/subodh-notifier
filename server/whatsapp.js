@@ -95,7 +95,7 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             let pdfPath = "";
 
             if (link.toLowerCase().endsWith('.pdf')) {
-                message = `*Latest Update:* ${title}\n\n> ${emoji} Via *Subodh Notifier*`;
+                message = `*Latest Update:* ${title}\n\n> Blurry Image? Get PDF: ${link}\n\n> ${emoji} Via *Subodh Notifier*`;
 
                 pdfPath = await downloadAndConvertPdf(link);
 
