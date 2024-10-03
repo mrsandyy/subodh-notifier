@@ -83,13 +83,14 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             const title = newsDataElement.title;
             const link = newsDataElement.link;
             const date = newsDataElement.date;
+            let emoji = getEmojis();
 
             let message = "";
             let sentMessage = null;
             let pdfPath = "";
 
             if (link.toLowerCase().endsWith('.pdf')) {
-                message = `*Latest Update:* ${title}\n\n> ${link}\n\n> ✨ Via *Subodh Notifier*`;
+                message = `*Latest Update:* ${title}\n\n> ${emoji} Via *Subodh Notifier*`;
 
                 pdfPath = await downloadPdf(link);
 
@@ -97,17 +98,17 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
                 sentMessage = await client.sendMessage(chatId, media, { caption: message });
 
             } else if (link.toLowerCase().endsWith('notice_board')) {
-                message = `*Latest Update:* ${title}\n\n> ${link}\n\n> ✨ Via *Subodh Notifier*`;
+                message = `*Latest Update:* ${title}\n\n> ${emoji} Via *Subodh Notifier*`;
                 sentMessage = await client.sendMessage(chatId, message);
             } else {
-                message = `*Latest Update:* ${title}\n\n> ${link}\n\n> ✨ Via *Subodh Notifier*`;
+                message = `*Latest Update:* ${title}\n\n> ${link}\n\n> ${emoji} Via *Subodh Notifier*`;
                 sentMessage = await client.sendMessage(chatId, message);
             };
 
             console.log('Message sent, waiting to verify...');
 
             // Wait for the message to be processed
-            await sleep(5000);
+            await sleep(5000); // 5 Sec
 
             const isVerified = await verifyMessageInGroup(client, chatId, message);
             if (isVerified) {
@@ -147,3 +148,27 @@ export const verifyMessageInGroup = async (client, chatId, messageContent) => {
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export const getEmojis = () => {
+    const emphasisEmojis = [
+        "🌟", // Star
+        "✨", // Sparkles
+        "🔥", // Fire
+        "🎉", // Party Popper
+        "👊🏻", // Flexed Biceps
+        "🚀", // Rocket (for growth or success)
+        "🏆", // Trophy
+        "🥇", // 1st Place Medal
+        "📢", // Megaphone (for announcements)
+        "💫", // Dizzy (sparkling)
+        "❤️", // Heart
+        "🖤",
+        "🔔", // Bell (for alerts or notifications)
+        "🚨",
+        "🥵",
+        "😏"
+    ];
+
+    const randomIndex = Math.floor(Math.random() * emphasisEmojis.length);
+    return emphasisEmojis[randomIndex];
+};

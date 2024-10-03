@@ -9,7 +9,7 @@ dotenv.config();
 const URL = process.env.URL;
 const groupId = process.env.GROUP_ID;
 const channelId = process.env.CHANNEL_ID;
-const intervalBetweenScrapping = process.env.INTERVAL_BETWEEN_SCRAPING; // 10 mins
+const intervalBetweenScrapping = (process.env.INTERVAL_BETWEEN_SCRAPING * 60000); // Interval in mins * 60000 (one min in miliseconds)
 
 async function main() {
     const waClient = await startClient();
