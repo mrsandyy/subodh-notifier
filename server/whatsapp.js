@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import qrcodeTerminal from 'qrcode-terminal';
 import dotenv from 'dotenv';
 import Whatsapp from 'whatsapp-web.js';
-import { downloadPdf } from './pdf.js';
+import { downloadAndConvertPdf } from './pdf.js';
 
 const { Client, RemoteAuth, MessageMedia } = Whatsapp
 
@@ -41,6 +41,11 @@ export const startClient = async () => {
     const clientReadyPromise = new Promise((resolve) => {
         client.on('ready', async () => {
             console.log('Logged in successfully!');
+
+            let channelInviteCode = '0029Vai6R9U6LwHig8CU2L1n';
+
+            console.log(await client.getChannelByInviteCode(channelInviteCode));
+
             resolve(client);
         });
     });
@@ -92,7 +97,7 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             if (link.toLowerCase().endsWith('.pdf')) {
                 message = `*Latest Update:* ${title}\n\n> ${emoji} Via *Subodh Notifier*`;
 
-                pdfPath = await downloadPdf(link);
+                pdfPath = await downloadAndConvertPdf(link);
 
                 const media = MessageMedia.fromFilePath(pdfPath);
                 sentMessage = await client.sendMessage(chatId, media, { caption: message });

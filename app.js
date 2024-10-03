@@ -34,14 +34,14 @@ async function main() {
                     const messageContent = `*${newsDataElement.title}* \n\n Date: ${newsDataElement.date} \n\n Link: ${newsDataElement.link}`;
 
                     // Check if the message was already sent successfully
-                    if (await verifyMessageInGroup(waClient, groupId, messageContent)) {
+                    if (await verifyMessageInGroup(waClient, channelId, messageContent)) {
                         console.log(`Message already sent successfully: ${newsDataElement.title}`);
                         success = true;
                     } else {
                         while (retries > 0 && !success) {
                             try {
                                 console.log(`Attempting to send news: ${newsDataElement.title}`);
-                                success = await sendMessageToId(waClient, groupId, newsDataElement);
+                                success = await sendMessageToId(waClient, channelId, newsDataElement);
                                 if (success) {
                                     console.log(`News sent successfully: ${newsDataElement.title}`);
                                 } else {
