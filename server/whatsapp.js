@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import Whatsapp from 'whatsapp-web.js';
 import { downloadPdf } from './pdf.js';
 
-const { Client, RemoteAuth, MessageMedia } = Whatsapp
+const { Client, LocalAuth, RemoteAuth, MessageMedia } = Whatsapp
 
 dotenv.config();
 
@@ -22,14 +22,20 @@ const connectToMongo = async () => {
 };
 
 export const startClient = async () => {
-    await connectToMongo();
+    // await connectToMongo();
 
     const store = new MongoStore({ mongoose });
 
+    // const client = new Client({
+    //     authStrategy: new RemoteAuth({
+    //         store,
+    //         backupSyncIntervalMs: 300000,
+    //     })
+    // });
+
     const client = new Client({
-        authStrategy: new RemoteAuth({
-            store,
-            backupSyncIntervalMs: 300000,
+        authStrategy: new LocalAuth({
+            dataPath: './.auth'
         })
     });
 
