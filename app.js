@@ -21,7 +21,9 @@ async function main() {
             const uniqueNewsArray = await getUniqueNews(URL);
             console.log(`Fetched ${uniqueNewsArray.length} new news items.`);
 
-            for (const newsDataElement of uniqueNewsArray) {
+            const reversedNewsArray = uniqueNewsArray.reverse();
+
+            for (const newsDataElement of reversedNewsArray) {
                 queue.add(async () => {
                     let retries = 3;
                     let success = false;

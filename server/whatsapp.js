@@ -117,7 +117,7 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
 
                 const randomNum = Math.random();
 
-                if (randomNum < 0.6) {
+                if (randomNum < 0.7) {
                     message = `${formattingMessage.header}\n\n> ${formattingMessage.date}\n\n> ${formattingMessage.footer}`;
                 } else {
                     message = `${formattingMessage.header}\n\n> ${formattingMessage.credit}\n\n> ${formattingMessage.footer}`;
