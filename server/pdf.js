@@ -6,8 +6,8 @@ import pdf2img from 'pdf-img-convert';
 
 export const downloadAndConvertPdf = async (pdfUrl) => {
     try {
-        const pdfDir = "./pdf";
-        const imgDir = "./img";
+        const pdfDir = "./data/pdf";
+        const imgDir = "./data/img";
 
         await fs.mkdir(pdfDir, { recursive: true });
         await fs.mkdir(imgDir, { recursive: true });

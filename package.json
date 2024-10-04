@@ -1,7 +1,7 @@
 {
-  "name": "subodhnotifier",
-  "version": "1.0.0",
-  "description": "An automated service to send webpush notifications of every new update from Subodh Website",
+  "name": "subodh-notifier",
+  "version": "2.0.0",
+  "description": "An automated WhatsApp bot that scrapes and delivers the latest updates from SS Jain Subodh College to students via a dedicated channel, enhancing information accessibility and convenience.",
   "main": "app.js",
   "type": "module",
   "scripts": {
@@ -9,10 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MrSandy01/SubodhNotifier.git"
+    "url": "git+https://github.com/mrsandyy/SubodhNotifier.git"
   },
-  "author": "MrSandy",
-  "license": "ISC",
+  "author": "Sandeep Vishnoi (@MrSandyy_)",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/MrSandy01/SubodhNotifier/issues"
   },
