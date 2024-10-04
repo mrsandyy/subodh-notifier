@@ -88,25 +88,45 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             const title = newsDataElement.title;
             const link = newsDataElement.link;
             const date = newsDataElement.date;
-            let emoji = getEmojis();
 
             let message = "";
             let sentMessage = null;
-            let pdfPath = "";
+            let imgPath = "";
+
+            let credits = getCredits();
+            let emoji = getEmojis();
+
+            const formattingMessage = {
+                "header": `*Latest Update:* ${title}`,
+                "pdfInfo": `Blurry Image? Get PDF:\n> ${link}`,
+                "link": `Check Out:\n> ${link}`,
+                "date": `Fetched On: ${date}`,
+                "credit": credits,
+                "footer": `${emoji} Via *Subodh Notifier*`
+            }
 
             if (link.toLowerCase().endsWith('.pdf')) {
-                message = `*Latest Update:* ${title}\n\n> Blurry Image? Get PDF: ${link}\n\n> ${emoji} Via *Subodh Notifier*`;
+                message = `${formattingMessage.header}\n\n> ${formattingMessage.pdfInfo}\n\n> ${formattingMessage.footer}`;
 
-                pdfPath = await downloadAndConvertPdf(link);
+                imgPath = await downloadAndConvertPdf(link);
 
-                const media = MessageMedia.fromFilePath(pdfPath);
+                const media = MessageMedia.fromFilePath(imgPath);
                 sentMessage = await client.sendMessage(chatId, media, { caption: message });
 
             } else if (link.toLowerCase().endsWith('notice_board')) {
-                message = `*Latest Update:* ${title}\n\n> ${emoji} Via *Subodh Notifier*`;
+
+                const randomNum = Math.random();
+
+                if (randomNum < 0.6) {
+                    message = `${formattingMessage.header}\n\n> ${formattingMessage.date}\n\n> ${formattingMessage.footer}`;
+                } else {
+                    message = `${formattingMessage.header}\n\n> ${formattingMessage.credit}\n\n> ${formattingMessage.footer}`;
+                }
+
                 sentMessage = await client.sendMessage(chatId, message);
+
             } else {
-                message = `*Latest Update:* ${title}\n\n> ${link}\n\n> ${emoji} Via *Subodh Notifier*`;
+                message = `${formattingMessage.header}\n\n> ${formattingMessage.link}\n\n> ${formattingMessage.footer}`;
                 sentMessage = await client.sendMessage(chatId, message);
             };
 
@@ -156,24 +176,35 @@ export function sleep(ms) {
 
 export const getEmojis = () => {
     const emphasisEmojis = [
-        "🌟", // Star
-        "✨", // Sparkles
-        "🔥", // Fire
-        "🎉", // Party Popper
-        "👊🏻", // Flexed Biceps
-        "🚀", // Rocket (for growth or success)
-        "🏆", // Trophy
-        "🥇", // 1st Place Medal
-        "📢", // Megaphone (for announcements)
-        "💫", // Dizzy (sparkling)
-        "❤️", // Heart
+        "🌟",
+        "✨",
+        "🔥",
+        "🎉",
+        "🚀",
+        "🥇",
+        "📢",
+        "💫",
+        "❤️",
         "🖤",
-        "🔔", // Bell (for alerts or notifications)
-        "🚨",
-        "🥵",
+        "🔔",
         "😏"
     ];
 
     const randomIndex = Math.floor(Math.random() * emphasisEmojis.length);
     return emphasisEmojis[randomIndex];
+};
+
+export const getCredits = () => {
+    const creditArray = [
+        "Wanna Support?\n> Follow `@mrsandyy_` & `@myself.dhairya`",
+        "Made with 🖤 by `@mrsandyy_` & `@myself.dhairya`",
+        "Crafted with care by `@mrsandyy_` & `@myself.dhairya`",
+        "Designed and developed by `@mrsandyy_` & `@myself.dhairya`",
+        "A joint effort by `@mrsandyy_` & `@myself.dhairya`",
+        "Passionately crafted by `@mrsandyy_` & `@myself.dhairya`",
+        "Feeling supportive?\n> Follow `@mrsandyy_` & `@myself.dhairya`"
+    ];
+
+    const randomIndex = Math.floor(Math.random() * creditArray.length);
+    return creditArray[randomIndex];
 };
