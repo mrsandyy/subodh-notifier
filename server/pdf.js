@@ -34,7 +34,7 @@ export const downloadAndConvertPdf = async (pdfUrl) => {
         const pdfBuffer = await response.arrayBuffer();
         await fs.writeFile(pdfPath, Buffer.from(pdfBuffer));
 
-        // Convert PDF to high-resolution images
+        // Convert PDF to image
         const outputImages = await pdf2img.convert(pdfPath, {
             width: 2048, // Increased resolution
             scale: 2,    // Scale factor for better quality
@@ -67,9 +67,21 @@ export const downloadAndConvertPdf = async (pdfUrl) => {
             .png()
             .toBuffer();
 
-        // Save high-quality PNG
-        const pngPath = path.join(imgDir, `${pdfName.replace('.pdf', '_hq.png')}`);
-        await fs.writeFile(pngPath, combinedImage);
+        const watermarkedImage = await sharp(combinedImage)
+            .composite([{
+                input: Buffer.from(`<svg width="${metadata.width}" height="${combinedHeight}">
+                    <text x="${metadata.width - 10}" y="${combinedHeight - 10}" font-family="Arial" font-size="24" fill="red" text-anchor="end" opacity="0.7">
+                        Via @mrsandyy_
+                    </text>
+                </svg>`),
+                top: 0,
+                left: 0,
+            }])
+            .png()
+            .toBuffer();
+
+        const pngPath = path.join(imgDir, `${pdfName.replace('.pdf', '.png')}`);
+        await fs.writeFile(pngPath, watermarkedImage);
 
         return pngPath;
     } catch (error) {
