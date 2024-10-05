@@ -117,7 +117,7 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
 
                 const randomNum = Math.random();
 
-                if (randomNum < 0.7) {
+                if (randomNum < 7) { //change to 0.7 for random credits
                     message = `${formattingMessage.header}\n\n> ${formattingMessage.date}\n\n> ${formattingMessage.footer}`;
                 } else {
                     message = `${formattingMessage.header}\n\n> ${formattingMessage.credit}\n\n> ${formattingMessage.footer}`;
@@ -186,8 +186,7 @@ export const getEmojis = () => {
         "💫",
         "❤️",
         "🖤",
-        "🔔",
-        "😏"
+        "🔔"
     ];
 
     const randomIndex = Math.floor(Math.random() * emphasisEmojis.length);
