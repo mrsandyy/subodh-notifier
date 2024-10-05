@@ -41,11 +41,6 @@ export const startClient = async () => {
     const clientReadyPromise = new Promise((resolve) => {
         client.on('ready', async () => {
             console.log('Logged in successfully!');
-
-            let channelInviteCode = '0029Vai6R9U6LwHig8CU2L1n';
-
-            console.log(await client.getChannelByInviteCode(channelInviteCode));
-
             resolve(client);
         });
     });
