@@ -1,3 +1,6 @@
+// This file includes software developed by the Whatsapp-web.js project,
+// licensed under the Apache License 2.0. See the NOTICE file for details.
+
 import { MongoStore } from 'wwebjs-mongo';
 import mongoose from 'mongoose';
 import qrcodeTerminal from 'qrcode-terminal';

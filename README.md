@@ -77,12 +77,19 @@ Please note that this project is released with a Contributor Code of Conduct. By
 
 ## Authors
 
-- **Sandeep Vishnoi** (@mrsandyy\_) - _Core Developer_
-- **Dhairya Gupta** - _Core Contributor_
+- **Sandeep Vishnoi** [(@mrsandyy\_)](https://www.instagram.com/mrsandyy_/) - _Core Developer_
+- **Dhairya Gupta** [(@myself.dhairya)](https://instagram.com/myself.dhairya/) - _Core Contributor_
 
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+### Third-Party Licenses
+
+This project uses several open-source libraries, including Whatsapp-web.js, which is licensed under the Apache License 2.0. To comply with the various license requirements:
+
+1. We have included a [NOTICE](NOTICE) file in the root of our project repository, which contains the required attributions and notices for third-party libraries.
+2. For a full list of dependencies and their licenses, please see the `package.json` file and the corresponding license files in the `node_modules` directory.
 
 ## Acknowledgments
 
