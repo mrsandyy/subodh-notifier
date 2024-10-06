@@ -73,6 +73,8 @@ We welcome contributions to improve Subodh Notifier! If you have suggestions or 
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details.
+
 ## Authors
 
 - **Sandeep Vishnoi** (@mrsandyy\_) - _Core Developer_
@@ -80,7 +82,7 @@ We welcome contributions to improve Subodh Notifier! If you have suggestions or 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
@@ -93,6 +95,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 For any queries, suggestions, or support, please contact:
 
 - Sandeep Vishnoi - [@mrsandyy\_](https://www.instagram.com/mrsandyy_/)
-- Dhairya Gupta - [@myself.dhairya](https://www.instagram.com/myself.dhairya/)
 
 Join the Subodh Notifier channel on WhatsApp to start receiving updates!
