@@ -1,6 +1,6 @@
-import { startClient, sleep, sendMessageToId, verifyMessageInGroup, pingClient } from "./server/whatsapp.js";
-import { getUniqueNews, updateSentNews } from "./server/news.js";
-import { getRandomDelay } from "./server/timeFunctions.js";
+import { startClient, sleep, sendMessageToId, verifyMessageInGroup, pingClient } from "./src/whatsapp.js";
+import { getUniqueNews, updateSentNews } from "./src/news.js";
+import { getRandomDelay } from "./src/timeFunctions.js";
 import pQueue from 'p-queue';
 import dotenv from 'dotenv';
 
