@@ -33,7 +33,10 @@ export const startClient = async () => {
         authStrategy: new RemoteAuth({
             store,
             backupSyncIntervalMs: 300000,
-        })
+        }),
+        puppeteer: {
+            args: ['--no-sandbox']
+        }
     });
 
     client.on('qr', (qr) => {
