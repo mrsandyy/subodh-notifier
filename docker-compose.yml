@@ -1,0 +1,10 @@
+version: "3"
+services:
+  subodh-notifier:
+    image: mrsandyy/subodh-notifier:1.0
+    container_name: subodh-notifier
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - ./data:/usr/src/app/data
