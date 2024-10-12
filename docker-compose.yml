@@ -1,7 +1,7 @@
 services:
   subodh-notifier:
     image: mrsandyy/subodh-notifier:2.0
-    container_name: dev-subodh-notifier
+    container_name: subodh-notifier-dev
     restart: unless-stopped
     env_file:
       - ./.env
