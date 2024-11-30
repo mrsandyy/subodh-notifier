@@ -117,6 +117,6 @@ This project uses several open-source libraries, including Whatsapp-web.js, whic
 
 For any queries, suggestions, or support, please contact:
 
-- Sandeep Vishnoi - [@mrsandyy\_](https://www.instagram.com/mrsandyy_/)
+- Sandeep Vishnoi - contact@mrsandy.in
 
 Join the Subodh Notifier channel on WhatsApp to start receiving updates!
