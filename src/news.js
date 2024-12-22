@@ -39,9 +39,9 @@ export let getUniqueNews = async (URL) => {
                 return false;
             }; // Not Unique if older than threshold date.
 
-            // if (isSimilarTitle(newItem.title, oldTitle, titleSimilarityThresholdHigh)) {
-            //    return false;
-            // }; // Not unique if a title similarity is more than 0.98
+            if (isSimilarTitle(newItem.title, oldTitle, titleSimilarityThresholdHigh)) {
+               return false;
+            }; // Not unique if a title similarity is more than 0.98
 
             if (isSimilarTitle(newItem.title, oldTitle, titleSimilarityThresholdLow)) {
                 if (!(isNewerThanThresholdDate(sentNewsArray[oldTitleindex], newNewsDaysThreshold))) {
