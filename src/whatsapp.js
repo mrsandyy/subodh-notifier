@@ -100,7 +100,7 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             const formattingMessage = {
                 "header": `*Latest Update:* ${title}`,
                 "pdfInfo": `Blurry Image? Get PDF:\n> ${link}`,
-                "mediaErr": "Error Sending Pdf. Get PDF:",
+                "mediaErr": "Error Sending Pdf, Get PDF:",
                 "link": `Check Out:\n> ${link}`,
                 "date": `Fetched On: ${date}`,
                 "credit": credits,
@@ -117,7 +117,7 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
                 try {
                     sentMessage = await client.sendMessage(chatId, media, { caption: message });
                 } catch (error) {
-                    message = `${formattingMessage.header}\n\n> ${formattingMessage.mediaErr}\n\n> ${formattingMessage.link}\n\n> ${formattingMessage.footer}`;
+                    message = `${formattingMessage.header}\n\n> ${formattingMessage.mediaErr}\n> ${formattingMessage.link}\n\n> ${formattingMessage.footer}`;
                     sentMessage = await client.sendMessage(chatId, message);             
                 }
 
