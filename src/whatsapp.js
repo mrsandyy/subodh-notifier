@@ -100,7 +100,7 @@ export const sendMessageToId = async (client, chatId, newsDataElement) => {
             const formattingMessage = {
                 "header": `*Latest Update:* ${title}`,
                 "pdfInfo": `Blurry Image? Get PDF:\n> ${link}`,
-                "mediaErr": "Error Sending Pdf, Get PDF:",
+                "mediaErr": "Error While Sending Pdf.",
                 "link": `Check Out:\n> ${link}`,
                 "date": `Fetched On: ${date}`,
                 "credit": credits,
