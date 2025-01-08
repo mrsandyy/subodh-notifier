@@ -52,10 +52,10 @@ export const startClient = async () => {
     });
 
     client.on('message_create', message => {
-        if (message.body.toLowerCase() === 'hi') {
+        if (message.body.toLowerCase() === 'ping') {
             const delay = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000;
             setTimeout(() => {
-                client.sendMessage(message.from, 'wassup');
+                client.sendMessage(message.from, 'Notifier is Up & Runnin');
             }, delay);
         }
     });
