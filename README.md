@@ -23,19 +23,13 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 > [!IMPORTANT]
 > **Before contributing to, modifying, or using this project, please review our [CODE OF CONDUCT](CODE_OF_CONDUCT.md) and [License](LICENSE). By participating, you agree to abide by these guidelines.**
 
----
-
 ## 📄 License
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
----
 
 ## Authors
 
 - **Sandeep Vishnoi** [(@mrsandyy\_)](https://www.instagram.com/mrsandyy_/) - _Core Developer_
 - **Dhairya Gupta** [(@myself.dhairya)](https://instagram.com/myself.dhairya/) - _Core Contributor_
-
----
 
 ## 🧠 Maintained By
 - **Sandeep Vishnoi** [(@mrsandyy\_)](https://www.instagram.com/mrsandyy_/)
