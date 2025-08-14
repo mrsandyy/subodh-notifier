@@ -2,6 +2,16 @@
 
 Subodh Notifier is an automated WhatsApp bot that scrapes the latest updates from SS Jain Subodh College's website and delivers them to students via a dedicated WhatsApp channel. It includes a modern web frontend to showcase announcements and project functionality.
 
+> [!CAUTION]
+> This repository is being rebuilt from scratch to make it more open-source friendly and easier to contribute to.  
+>
+> **legacy branch** → contains the original working code.  
+>
+> **main branch** → currently under active development and may be unstable.  
+>
+> If you’re looking for the current functional version, please check the `legacy` branch.  
+> New updates will be merged into `main` once the rebuild is complete.
+
 ---
 
 ## Purpose
